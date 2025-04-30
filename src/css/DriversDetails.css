@@ -1,0 +1,20 @@
+.testimonial-card {
+    transition: transform 0.4s ease, background-color 0.4s ease;
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  
+  .testimonial-card.active.scale-lg {
+    transform: scale(1.2);
+    opacity: 1;
+    z-index: 2;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  }
+  .driver-profile-image {
+    max-width: 100%; /* Ensures image fits within the container */
+    height: auto; /* Maintains aspect ratio */
+    max-height: 300px; /* Limits the height to avoid oversized images */
+    object-fit: cover; /* Makes sure the image covers the container area */
+    border-radius: 8px; /* Optional: gives rounded corners */
+  }
+    

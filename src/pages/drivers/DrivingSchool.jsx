@@ -1,7 +1,7 @@
 import React from 'react'
-import NavB from '../components/NavB'
-import Footer from '../components/Footer'
-import DrivingSchoolHome from '../components/DrivingSchoolHome'
+import NavB from '../../components/NavB'
+import Footer from '../../components/Footer'
+import DrivingSchoolHome from '../../components/drivers/DrivingSchoolHome'
 const DrivingSchool = () => {
   return (
     <div>

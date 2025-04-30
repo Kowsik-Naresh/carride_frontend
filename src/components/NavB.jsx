@@ -1,44 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Offcanvas from 'react-bootstrap/Offcanvas';
+import { Navbar, Nav, Container, Offcanvas } from 'react-bootstrap';
 
 function NavB() {
-  const [selectedTab, setSelectedTab] = useState(0); 
+  const [selectedTab, setSelectedTab] = useState(0);
   const location = useLocation();
 
   useEffect(() => {
-    const tab = localStorage.getItem("tabNumber");
-    if (tab !== null) {
-      setSelectedTab(Number(tab));
-    }
+    const tab = localStorage.getItem('tabNumber');
+    if (tab) setSelectedTab(Number(tab));
   }, []);
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/': setSelectedTab(1); break;
+      case '/cars': setSelectedTab(2); break;
+      case '/drivers': setSelectedTab(3); break;
+      case '/drivering_job': setSelectedTab(4); break;
+      case '/driving_school': setSelectedTab(5); break;
+      default: setSelectedTab(0);
+    }
+  }, [location]);
 
   const handleSetSelectedTab = (tabNumber) => {
     setSelectedTab(tabNumber);
-    localStorage.setItem("tabNumber", tabNumber);
+    localStorage.setItem('tabNumber', tabNumber);
   };
 
   const navStyle = (tabNumber) => ({
-    borderBottom: selectedTab === tabNumber ? '1px solid red' : 'none',
-    padding: '8px 8px',
-    fontWeight: selectedTab === tabNumber ? 'bold' : 'normal',
-    color: selectedTab === tabNumber ? '#000' : '#333',
+    padding: '8px 15px', // Reduced padding for a more compact navbar
+    fontSize: '14px', // Further reduced font size
+    fontWeight: selectedTab === tabNumber ? '600' : '400',
+    color: selectedTab === tabNumber ? '#00aaff' : '#333',
     textDecoration: 'none',
-    cursor: 'pointer',
-    color:'blue'
+    borderBottom: selectedTab === tabNumber ? '3px solid #00aaff' : 'none',
+    transition: 'color 0.3s ease, border-bottom 0.3s ease',
+    display: 'inline-block',
+    margin: '0 8px', // Reduced horizontal margin
   });
 
   return (
-    <Navbar expand="lg" className="mb-3" style={{ backgroundColor: "#DFDDDD" }}>
+    <Navbar expand="lg" className="shadow-sm sticky-top" style={{ backgroundColor: '#ffffff', padding: '2px 0' }}> {/* Reduced top and bottom padding */}
       <Container fluid>
-        <Navbar.Brand as={NavLink} to="/">
+        <Navbar.Brand as={NavLink} to="/" onClick={() => handleSetSelectedTab(1)}>
           <img
             src="/krishna.png"
-            alt="logo"
-            style={{ margin: "-10px" ,width:"100%",height:"80px"}}
+            alt="Krishna Travels Logo"
+            style={{ height: '50px', objectFit: 'contain' }} // Reduced logo size further
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
@@ -51,16 +59,14 @@ function NavB() {
             <Offcanvas.Title id="offcanvasNavbarLabel-expand-lg">
               <img
                 src="/krishna.png"
-                alt="logo"
-                width={300}
-                height={80}
-                style={{ margin: "-10px" }}
+                alt="Krishna Travels Logo"
+                style={{ height: '35px', objectFit: 'contain' }} // Reduced logo size for consistency
               />
             </Offcanvas.Title>
           </Offcanvas.Header>
 
           <Offcanvas.Body>
-            <Nav className="justify-content-end flex-grow-1 pe-3">
+            <Nav className="ms-auto align-items-center">
               <Nav.Link as={NavLink} to="/" onClick={() => handleSetSelectedTab(1)}>
                 <span style={navStyle(1)}>Home</span>
               </Nav.Link>

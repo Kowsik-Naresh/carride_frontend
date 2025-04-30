@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Container} from "react-bootstrap";
-import "../css/jobs.css";
+import "../../css/jobs.css";
 import { Link } from "react-router-dom";
 const DrivingJobsHome = () => {
   const [filteredJobs,setFilteredJobs]=useState([]);

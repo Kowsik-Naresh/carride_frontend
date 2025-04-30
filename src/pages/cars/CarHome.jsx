@@ -1,7 +1,7 @@
 import React from 'react'
-import NavB from '../components/NavB'
-import Footer from '../components/Footer'
-import Cars from '../components/Cars'
+import NavB from '../../components/NavB'
+import Footer from '../../components/Footer'
+import Cars from '../../components/cars/Cars'
 const CarHome = () => {
   return (
     <div>
