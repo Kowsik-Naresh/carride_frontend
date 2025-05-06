@@ -1,0 +1,61 @@
+/* Custom styles for User Registration Form */
+body {
+    background-color: #f4f7fa;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  h4 {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 20px;
+  }
+  
+  .form-control {
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  button {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    background-color: #007bff;
+    border: none;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  button:focus {
+    box-shadow: none;
+  }
+  
+  input[type="file"] {
+    padding: 0;
+  }
+  
+  @media (max-width: 576px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .form-control {
+      font-size: 0.9rem;
+    }
+  }
+@media (min-width: 992px) {
+  .custom-form-container {
+    max-width: 1000px; 
+    margin: auto;
+  }
+}
+
+  

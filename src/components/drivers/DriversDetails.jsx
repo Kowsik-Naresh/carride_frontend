@@ -1,147 +1,302 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Row, Col, Button, Nav, Card } from 'react-bootstrap';
-import { FaStar, FaCarSide } from 'react-icons/fa';
-import "../../css/DriversDetails.css";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Nav,
+  Card,
+  Tab,
+  Modal,
+  Form,
+} from 'react-bootstrap';
+import { FaStar, FaCarSide, FaInfoCircle } from 'react-icons/fa';
+import { BsStarFill as StarFill } from 'react-icons/bs';
+import '../../css/DriversDetails.css';
 import NavB from '../NavB';
+import LoadingPanel from '../../predefind/LoadingPanel';
+import appInitData from '../../required/appInitData.json';
+import Notification from '../../predefind/Notification';
+
+const getAvatarColor = (letter) => {
+  const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#6f42c1'];
+  const index = letter.toUpperCase().charCodeAt(0) % colors.length;
+  return colors[index];
+};
 
 const DriverDetail = () => {
   const { driverId } = useParams();
+  const intDriverId = parseInt(driverId, 10);
   const [driver, setDriver] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedTab, setSelectedTab] = useState("reviews");
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('info');
+  const [reviews, setReviews] = useState([]);
+  const [show, setShow] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [revieweduserId,setRevieweduserId]=useState(-1);
+  const [notification,setNotification]=useState(null)
+  const [feedback, setFeedback] = useState({
+    revieweduserId,
+    reviewRating: rating,
+    reviewText: '',
+    reviewedDriverId:parseInt(driverId,10),
+  });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.userId) {
+      setRevieweduserId(user.userId);
+  
+      setFeedback(prev => ({
+        ...prev,
+        revieweduserId: user.userId
+      }));
+    }
+  }, []);
+
+  const handleStarColors = (index) => {
+    setRating(index + 1);
+    setFeedback((prev) => ({ ...prev, reviewRating: index + 1 }));
+  };
+
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   useEffect(() => {
     axios
-      .get(`http://192.168.1.111:8080/drivers/getDriverById?driverId=${driverId}`)
+      .get(`${appInitData.springUrl}/drivers/getDriverById?driverId=${intDriverId}`)
       .then((res) => {
-        setDriver(res.data.data);
+        setDriver(res.data.data.driverBean);
+        setReviews(res.data.data.reviewBean || []);
+        setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching driver data", err);
+        setNotification({
+           status: 'failure',
+            message: 'Failed to fetch driver and reviews. Please try again.'
+        })
+        console.error('Error fetching driver data', err);
+        setLoading(false);
       });
-  }, [driverId]);
+  }, [intDriverId]);
 
-  if (!driver) {
-    return (
-      <Container className="py-5">
-        <h3 className="text-center text-danger">Loading driver details...</h3>
-      </Container>
-    );
-  }
-
-  const visibleTestimonials = driver.testimonials ? [
-    driver.testimonials[(currentIndex - 1 + driver.testimonials.length) % driver.testimonials.length],
-    driver.testimonials[currentIndex],
-    driver.testimonials[(currentIndex + 1) % driver.testimonials.length],
-  ] : [];
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % driver.testimonials.length);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFeedback((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + driver.testimonials.length) % driver.testimonials.length);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+   
+    console.log('Feedback submitted:', feedback);
+    axios.post(`${appInitData.springUrl}/review/saveReview`,feedback).then(()=>{
+      setNotification({
+        status: 'success',
+         message: 'Reviewed saved successfully.'
+     })
+    }).catch((err)=>{
+      setNotification({
+        status: 'failure',
+         message: 'failed  to save.'
+     })
+      console.log("error"+err);
+    });
+    handleClose();
   };
 
   return (
     <div>
       <NavB />
+      {notification && (
+              <Notification
+                requirements={notification}
+                onClose={() => setNotification(null)}
+              />
+            )}
+      {loading ? (
+        <div style={{ width: '100vw', height: '90vh' }}>
+          <LoadingPanel />
+        </div>
+      ) : (
+        <Container className="py-5">
+          <Row className="align-items-start mb-4">
+          <Col md={4} sm={12} className="text-center driver-card">
+  <img
+    src={driver.profileImage}
+    alt={driver.driverName}
+    className="img-fluid shadow driver-profile-image mb-3"
+  />
+  <h2 className="fw-semibold text-dark mb-3">{driver.driverName}</h2>
+  <div className="d-flex justify-content-center gap-4">
+    <Button variant="outline-primary" onClick={handleShow}>Feedback</Button>
+    <Button id="booknow" onClick={handleShow}>Book Now</Button>
+  </div>
+</Col>
 
-      <Container className="py-5">
-        <Row className="align-items-center mb-5">
-          <Col md={5} className="mb-4">
-          <img
-  src={driver.profileImage}
-  alt={driver.driverName}
-  className="img-fluid rounded shadow-lg driver-profile-image"
-/>
 
-          </Col>
-          <Col md={7}>
-            <h2 className="fw-bold mb-3 text-primary">{driver.driverName}</h2>
-            <p className="text-muted fs-5">{driver.bio || "No bio available."}</p>
-            <div className="mt-4">
-              <h5 className="fw-semibold text-dark">📞 Contact Information</h5>
-              <p><strong>Phone:</strong> {driver.mobileNumber}</p>
-              <Button variant="success" className="rounded-pill px-4 mt-2" onClick={() => alert(`Contacting ${driver.driverName}`)}>
-                Contact Driver
-              </Button>
-            </div>
-          </Col>
-        </Row>
-
-        <Nav variant="tabs" className="justify-content-center mb-4">
-          <Nav.Item>
-            <Nav.Link active={selectedTab === "reviews"} onClick={() => setSelectedTab("reviews")}>
-              Reviews
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link active={selectedTab === "tripHistory"} onClick={() => setSelectedTab("tripHistory")}>
-              Driver Trip History
-            </Nav.Link>
-          </Nav.Item>
-        </Nav>
-
-        {selectedTab === "reviews" && driver.testimonials && (
-          <div>
-            <h4 className="mb-4 text-primary text-center">What People Are Saying</h4>
-            <Row className="justify-content-center gap-4">
-              {visibleTestimonials.length > 0 && visibleTestimonials.map((testimonial, index) => {
-                const isCenter = index === 1;
-                return (
-                  <Col
-                    key={index}
-                    md={3}
-                    className={`p-3 rounded text-center testimonial-card transition ${isCenter ? 'active bg-primary text-white scale-lg' : 'bg-light text-muted'}`}
-                  >
-                    <p className={`fs-6 ${isCenter ? 'text-white' : 'text-muted'}`}>"{testimonial.text}"</p>
-                    <div className="mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <FaStar
-                          key={i}
-                          color={i < testimonial.stars ? "#FFD700" : isCenter ? "#ccc" : "#999"}
-                          style={{ fontSize: "18px", margin: "0 2px" }}
-                        />
-                      ))}
-                    </div>
-                    <h6 className={`fw-bold ${isCenter ? 'text-white' : 'text-dark'}`}>{testimonial.name}</h6>
+            <Col md={8} sm={12}>
+              <Tab.Container activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
+                <Row>
+                  <Col md={12}>
+                    <Nav variant="tabs" className="custom-nav-tabs justify-content-center mb-4">
+                      <Nav.Item><Nav.Link eventKey="info">Info</Nav.Link></Nav.Item>
+                      <Nav.Item><Nav.Link eventKey="reviews">Reviews</Nav.Link></Nav.Item>
+                      <Nav.Item><Nav.Link eventKey="tripHistory">Trip History</Nav.Link></Nav.Item>
+                    </Nav>
                   </Col>
-                );
-              })}
-            </Row>
-            <div className="text-center mt-5">
-              <button className="mx-2" onClick={handlePrev} style={{ transform: 'scaleX(-1)' }}>
-                <FaCarSide size={30} />
-              </button>
-              <button className="mx-2" onClick={handleNext}>
-                <FaCarSide size={30} />
-              </button>
-            </div>
-          </div>
-        )}
+                </Row>
 
-        {selectedTab === "tripHistory" && driver.tripHistory && (
-          <div>
-            <h4 className="mb-4 text-primary text-center">Driver's Trip History</h4>
-            <Row>
-              {driver.tripHistory.map((trip, index) => (
-                <Col key={index} md={4} className="mb-3">
-                  <Card className="shadow-sm border-0">
-                    <Card.Body>
-                      <h5 className="fw-bold">{trip.route}</h5>
-                      <p className="text-muted">{trip.date}</p>
-                      <img src={trip.photo} alt={trip.route} className="img-fluid rounded mb-3" style={{ height: '200px', objectFit: 'cover' }} />
-                    </Card.Body>
-                  </Card>
-                </Col>
+                <Row>
+                  <Col>
+                    <Tab.Content>
+                      <Tab.Pane eventKey="info">
+                        <h5 className="mb-3">
+                          <FaInfoCircle className="text-info me-2" />
+                          Additional Driver Info
+                        </h5>
+                        <Row className="align-items-start">
+                          <Col md={6} className="mb-3">
+                            <p><strong>Experience:</strong> {driver.experience || 'N/A'} years</p>
+                            <p><strong>Rating:</strong> {driver.rating || 'Unrated'}</p>
+                          </Col>
+                          <Col md={6} className="mb-3">
+                            <p><strong>License Image:</strong></p>
+                            {driver.licenseImage ? (
+                              <img
+                                src={driver.licenseImage}
+                                alt="License"
+                                className="img-fluid rounded border shadow-sm"
+                                style={{ maxHeight: '250px', objectFit: 'contain' }}
+                              />
+                            ) : (
+                              <p className="text-muted">Not Available</p>
+                            )}
+                          </Col>
+                        </Row>
+                      </Tab.Pane>
+
+                      <Tab.Pane eventKey="reviews">
+                        {reviews.length === 0 ? (
+                          <Card className="mb-4">
+                            <Card.Body>
+                              <Card.Title><FaStar className="text-warning me-2" />Reviews</Card.Title>
+                              <p className="text-muted">No reviews available yet.</p>
+                            </Card.Body>
+                          </Card>
+                        ) : (
+                          <Row>
+                            {reviews.map((review, idx) => {
+                              const firstLetter = review.userName?.charAt(0) || 'U';
+                              const avatarColor = getAvatarColor(firstLetter);
+                              const hasImage = !!review.userProfileImage;
+                              return (
+                                <Col md={12} key={idx} className="p-0">
+                                  <Row className="align-items-center px-3 py-3 border-bottom bg-white">
+                                    <Col xs={12} md={3} className="d-flex align-items-center gap-3">
+                                      {hasImage ? (
+                                        <img
+                                          src={review.userProfileImage}
+                                          alt={review.userName}
+                                          width={50}
+                                          height={50}
+                                          className="rounded-circle"
+                                        />
+                                      ) : (
+                                        <div style={{
+                                          width: 50,
+                                          height: 50,
+                                          borderRadius: '50%',
+                                          backgroundColor: avatarColor,
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          color: 'white',
+                                          fontWeight: 'bold',
+                                          fontSize: '18px',
+                                        }}>{firstLetter.toUpperCase()}</div>
+                                      )}
+                                      <div>
+                                        <div className="d-flex align-items-center gap-2">
+                                          <h6 className="mb-0 fw-semibold text-dark">{review.userName}</h6>
+                                          <img src="/verified.png" alt="Verified" width={16} height={16} title="Verified User" />
+                                        </div>
+                                        <div className="d-flex gap-1 mt-1">
+                                          {[...Array(5)].map((_, index) => (
+                                            <StarFill
+                                              key={index}
+                                              color={index < review.reviewBean.reviewRating ? '#FFD700' : '#D3D3D3'}
+                                              size={15}
+                                            />
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </Col>
+                                    <Col xs={12} md={9}>
+                                      <p className="text-muted mb-0 text-start">{review.reviewBean.reviewText}</p>
+                                    </Col>
+                                  </Row>
+                                </Col>
+                              );
+                            })}
+                          </Row>
+                        )}
+                      </Tab.Pane>
+
+                      <Tab.Pane eventKey="tripHistory">
+                        <Card className="mb-4">
+                          <Card.Body>
+                            <Card.Title><FaCarSide className="text-primary me-2" />Trip History</Card.Title>
+                            <p className="text-muted">No trip history available.</p>
+                          </Card.Body>
+                        </Card>
+                      </Tab.Pane>
+                    </Tab.Content>
+                  </Col>
+                </Row>
+              </Tab.Container>
+            </Col>
+          </Row>
+        </Container>
+      )}
+
+      {/* Feedback Modal */}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Submit Your Feedback</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={handleSubmit}>
+          <Modal.Body>
+            <Form.Group className="mb-3">
+              <Form.Label>Review</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="reviewText"
+                value={feedback.reviewText}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <div className="d-flex gap-1 mt-1 mt-2">
+              {[...Array(5)].map((_, index) => (
+                <StarFill
+                  key={index}
+                  color={index < rating ? '#FFD700' : '#D3D3D3'}
+                  size={30}
+                  onClick={() => handleStarColors(index)}
+                  style={{ cursor: 'pointer' }}
+                />
               ))}
-            </Row>
-          </div>
-        )}
-      </Container>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+            <Button type="submit" variant="success">Submit Feedback</Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
     </div>
   );
 };

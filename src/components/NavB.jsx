@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, Offcanvas } from 'react-bootstrap';
-
+import { BiHome, BiUserCircle } from 'react-icons/bi';
+import { CarFrontFill, MortarboardFill } from 'react-bootstrap-icons';
+import { GiMassDriver, GiSteeringWheel } from 'react-icons/gi';
+import { FaSchool } from 'react-icons/fa';
+import '../css/navb.css'
 function NavB() {
   const [selectedTab, setSelectedTab] = useState(0);
   const location = useLocation();
@@ -12,13 +16,20 @@ function NavB() {
   }, []);
 
   useEffect(() => {
-    switch (location.pathname) {
-      case '/': setSelectedTab(1); break;
-      case '/cars': setSelectedTab(2); break;
-      case '/drivers': setSelectedTab(3); break;
-      case '/drivering_job': setSelectedTab(4); break;
-      case '/driving_school': setSelectedTab(5); break;
-      default: setSelectedTab(0);
+    if (location.pathname.includes('/cars')) {
+      setSelectedTab(2);
+    } else if (location.pathname.includes('/drivers')) {
+      setSelectedTab(3);
+    } else if (location.pathname.includes('/driving_job')) {
+      setSelectedTab(4);
+    } else if (location.pathname.includes('/driving_school')) {
+      setSelectedTab(5);
+    }else if(location.pathname.includes('/profile')){
+      setSelectedTab(6);
+    } else if (location.pathname === '/') {
+      setSelectedTab(1);
+    } else {
+      setSelectedTab(0); // fallback
     }
   }, [location]);
 
@@ -28,25 +39,26 @@ function NavB() {
   };
 
   const navStyle = (tabNumber) => ({
-    padding: '8px 15px', // Reduced padding for a more compact navbar
-    fontSize: '14px', // Further reduced font size
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
+    padding: '6px 12px',
+    fontSize: '18px',
     fontWeight: selectedTab === tabNumber ? '600' : '400',
     color: selectedTab === tabNumber ? '#00aaff' : '#333',
     textDecoration: 'none',
     borderBottom: selectedTab === tabNumber ? '3px solid #00aaff' : 'none',
     transition: 'color 0.3s ease, border-bottom 0.3s ease',
-    display: 'inline-block',
-    margin: '0 8px', // Reduced horizontal margin
   });
 
   return (
-    <Navbar expand="lg" className="shadow-sm sticky-top" style={{ backgroundColor: '#ffffff', padding: '2px 0' }}> {/* Reduced top and bottom padding */}
+    <Navbar expand="lg" className="shadow-sm sticky-top" style={{ backgroundColor: '#ffffff', padding: '2px 0' }}>
       <Container fluid>
         <Navbar.Brand as={NavLink} to="/" onClick={() => handleSetSelectedTab(1)}>
           <img
             src="/krishna.png"
             alt="Krishna Travels Logo"
-            style={{ height: '50px', objectFit: 'contain' }} // Reduced logo size further
+            style={{ height: '50px', objectFit: 'contain' }}
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
@@ -60,27 +72,30 @@ function NavB() {
               <img
                 src="/krishna.png"
                 alt="Krishna Travels Logo"
-                style={{ height: '35px', objectFit: 'contain' }} // Reduced logo size for consistency
+                style={{ height: '35px', objectFit: 'contain' }}
               />
             </Offcanvas.Title>
           </Offcanvas.Header>
 
           <Offcanvas.Body>
-            <Nav className="ms-auto align-items-center">
-              <Nav.Link as={NavLink} to="/" onClick={() => handleSetSelectedTab(1)}>
-                <span style={navStyle(1)}>Home</span>
+            <Nav className="ms-auto align-items-start">
+              <Nav.Link as={NavLink} to="/" style={navStyle(1)} onClick={() => handleSetSelectedTab(1)}>
+                <BiHome size={18} /> Home
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/cars" onClick={() => handleSetSelectedTab(2)}>
-                <span style={navStyle(2)}>Cars</span>
+              <Nav.Link as={NavLink} to="/cars" style={navStyle(2)} onClick={() => handleSetSelectedTab(2)}>
+                <CarFrontFill size={18} /> Cars
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/drivers" onClick={() => handleSetSelectedTab(3)}>
-                <span style={navStyle(3)}>Drivers</span>
+              <Nav.Link as={NavLink} to="/drivers" style={navStyle(3)} onClick={() => handleSetSelectedTab(3)}>
+                <GiSteeringWheel size={18} /> Drivers
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/drivering_job" onClick={() => handleSetSelectedTab(4)}>
-                <span style={navStyle(4)}>Driving Job's</span>
+              <Nav.Link as={NavLink} to="/driving_job" style={navStyle(4)} onClick={() => handleSetSelectedTab(4)}>
+                <MortarboardFill size={18} /> Driving Jobs
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/driving_school" onClick={() => handleSetSelectedTab(5)}>
-                <span style={navStyle(5)}>Driving School</span>
+              <Nav.Link as={NavLink} to="/driving_school" style={navStyle(5)} onClick={() => handleSetSelectedTab(5)}>
+                <FaSchool size={18} /> Driving School
+              </Nav.Link>
+              <Nav.Link as={NavLink} to="/profile" style={navStyle(6)} onClick={() => handleSetSelectedTab(6)}>
+                <BiUserCircle size={18} /> Account
               </Nav.Link>
             </Nav>
           </Offcanvas.Body>

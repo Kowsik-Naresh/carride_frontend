@@ -1,0 +1,54 @@
+/* Responsive driver card styles */
+.driver-card h5 {
+    font-size: 1.2rem;
+  }
+  
+  .driver-card p {
+    font-size: 0.95rem;
+  }
+  
+  /* Mobile font tweaks */
+  @media (max-width: 576px) {
+    .driver-heading {
+      font-size: 1.8rem !important;
+    }
+  
+    .driver-card h5 {
+      font-size: 1.05rem;
+    }
+  
+    .driver-card p {
+      font-size: 0.85rem;
+    }
+  
+    .driver-card .btn {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  .driver-heading {
+    text-align: center;
+    font-weight: 700;
+    color: #007bff; /* Bootstrap blue */
+    margin-bottom: 2rem;
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem); /* Responsive size */
+    position: relative;
+    font-size: 2em;
+    text-align: center;
+  }
+
+  
+  .driver-heading::after {
+    content: '';
+    position: absolute;
+    left: 50%; /* Start from the middle of the text */
+    transform: translateX(-50%);
+    bottom: -10px; /* Adjust for vertical positioning */
+    width: 60%; /* Control the width of the curve */
+    height: 10px; /* The height of the curve */
+    background: linear-gradient(145deg, skyblue, darkblue); /* Gradient from skyblue to darkblue */
+    border-radius: 50% 50% 0 0; /* U-shape */
+  }
+  
+  

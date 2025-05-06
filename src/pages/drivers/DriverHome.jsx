@@ -7,7 +7,9 @@ const DriverHome = () => {
   return (
     <div>
      <NavB/>
+     <div style={{ backgroundColor: '#f4f6f8' }}>
      <Drivers/>
+     </div>
     <Footer/>
     </div>
   )

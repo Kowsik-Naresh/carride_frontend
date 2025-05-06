@@ -1,0 +1,32 @@
+.custom-tabs-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #f4f6f8;
+    padding: 1rem 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .custom-tab {
+    background-color: transparent;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #555;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .custom-tab:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .custom-tab.active {
+    background-color: #ffffff;
+    color: #000;
+    border: 1px solid #ccc;
+    border-bottom: none;
+  }
+  

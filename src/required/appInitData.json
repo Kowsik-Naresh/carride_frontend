@@ -1,0 +1,10 @@
+{
+    "springUrl": "http://localhost:8080",
+  
+    "user": {
+      "userId": 1,
+      "userName": "Naresh",
+      "email": "naresh@example.com",
+      "profileImage": "https://yourcdn.com/images/naresh.jpg",
+      "isActive": true }
+}

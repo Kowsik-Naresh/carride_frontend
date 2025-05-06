@@ -15,6 +15,36 @@
     height: auto; /* Maintains aspect ratio */
     max-height: 300px; /* Limits the height to avoid oversized images */
     object-fit: cover; /* Makes sure the image covers the container area */
-    border-radius: 8px; /* Optional: gives rounded corners */
+    
   }
     
+  .driver-profile-image {
+    width: 200px; /* Increased size */
+    height: 200px;
+    object-fit: cover;
+   
+    transition: transform 0.3s ease;
+  }
+  
+  .driver-profile-image:hover {
+    transform: scale(1.05);
+  }
+  
+  .driver-card {
+    padding: 1.5rem;
+   
+    border-radius: 1rem;
+   
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 2rem;
+  }
+  #booknow {
+    transition: all 0.3s ease;
+  }
+  
+  #booknow:hover {
+    background-color: #ffffff;
+    color: #0d6efd; /* Bootstrap primary blue */
+    border: 1px solid #0d6efd;
+  }
+  
