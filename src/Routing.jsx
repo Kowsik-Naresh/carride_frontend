@@ -8,6 +8,9 @@ import DrivingJobs from './pages/drivers/DrivingJobs';
 import DriversDetail from './components/drivers/DriversDetails';
 import UserRegistrationForm from './components/user/UserRegistrationForm';
 import UserAccount from './pages/user/UserAccount';
+import Rentcar from './components/cars/CarDetails';
+import Rentwithdriver from './components/cars/Rentwithdriver';
+import CarDetails from './components/cars/CarDetails';
 
 const Routing = () => {
   const [UserDetails, setUserDetails] = useState({});
@@ -45,6 +48,7 @@ const Routing = () => {
               : <UserAccount />
           }
         />
+        <Route path="/rent/:id" element={<CarDetails />} />
       </Routes>
     </BrowserRouter>
   );

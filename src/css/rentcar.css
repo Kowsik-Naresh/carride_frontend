@@ -1,0 +1,63 @@
+.rent-page-bg {
+    background: linear-gradient(to right, #f0f8ff, #e0f7fa);
+    min-height: 100vh;
+  }
+  
+  .text-gradient {
+    background: linear-gradient(to right, #007bff, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .rent-card {
+    border-radius: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #ffffff;
+  }
+  
+  .rent-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rent-img-wrap {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+  
+  .rent-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  
+  .rent-img-wrap:hover .rent-img {
+    transform: scale(1.08);
+  }
+  
+  .rent-img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5));
+    pointer-events: none;
+  }
+  
+  .rent-btn {
+    background: linear-gradient(135deg, #007bff, #00cfff);
+    border: none;
+    font-weight: bold;
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.3);
+    transition: background 0.3s ease;
+  }
+  
+  .rent-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #0097cc);
+  }
+  
