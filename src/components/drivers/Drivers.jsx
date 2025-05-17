@@ -7,11 +7,12 @@ import LoadingPanel from '../../predefind/LoadingPanel';
 import DataNotFound from '../../predefind/DataNotFound';
 import Notification from '../../predefind/Notification';
 import '../../css/drivers.css';
+import { StarFill } from 'react-bootstrap-icons';
 
 const Drivers = () => {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notification, setNotification] = useState(null); // ✅ Corrected useState syntax
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,6 +42,7 @@ const Drivers = () => {
           onClose={() => setNotification(null)}
         />
       )}
+
       {loading ? (
         <div
           className="d-flex justify-content-center align-items-center"
@@ -50,55 +52,56 @@ const Drivers = () => {
         </div>
       ) : (
         <>
-        <h2 className="driver-heading">Meet Our Professional Drivers</h2>
+          {drivers.length > 0 ? (
+            <>
+              <h2 className="driver-heading">Meet Our Professional Drivers</h2>
 
-          <Row className="g-4">
-            {drivers.length > 0 ? (
-              drivers.map((driver) => (
-                <Col key={driver.driverId} xs={12} sm={6} md={4} lg={3}>
-                  <Card className="h-100 border-0 shadow-sm rounded-4 hover-shadow transition">
-                    <Card.Img
-                      variant="top"
-                      src={driver.profileImage}
-                      alt={driver.driverName}
-                      className="rounded-top"
-                      style={{
-                        height: '250px',
-                        objectFit: 'cover',
-                        borderTopLeftRadius: '1rem',
-                        borderTopRightRadius: '1rem'
-                      }}
-                    />
-                    <Card.Body className="d-flex flex-column">
-                      <h5 className="fw-bold text-dark mb-1">
-                        {driver.driverName}
-                      </h5>
-                      <p className="text-secondary mb-1">
-                        Experience: {driver.experience} yrs
-                      </p>
-                      <p className="text-secondary mb-3">
-                        Rating: {driver.rating || 'Not Rated'}
-                      </p>
-                      <div className="mt-auto">
-                        <Link to={`/drivers/${driver.driverId}`}>
-                          <Button
-                            variant="primary"
-                            className="w-100 rounded-pill"
-                          >
-                            View Profile
-                          </Button>
-                        </Link>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))
-            ) : (
-              <Col xs={12} className="text-center">
-                <DataNotFound text={'No drivers found.'} />
-              </Col>
-            )}
-          </Row>
+              <Row className="g-4">
+                {drivers.map((driver) => (
+                  <Col key={driver.driver.driverId} xs={12} sm={6} md={4} lg={3}>
+                    <Card className="h-100 border-0 shadow-sm rounded-4 card-hover">
+                      <Card.Img
+                        variant="top"
+                        src={driver.driver.profileImage}
+                        alt={driver.driver.driverName}
+                        className="driver-card-img"
+                      />
+                      <Card.Body className="d-flex flex-column p-3">
+                        <h5 className="fw-bold text-dark mb-1 text-center">
+                          {driver.driver.driverName}
+                        </h5>
+
+                        <p className="text-secondary mb-1 text-center">
+                          Experience: {driver.driver.experience} yrs
+                        </p>
+
+                        <div className="d-flex justify-content-center align-items-center mb-2">
+                          <span className="text-secondary me-2">Rating:</span>
+                          {[...Array(5)].map((_, index) => (
+                            <StarFill
+                              key={index}
+                              color={index < driver.rating ? '#FFD700' : '#d5d5d5'}
+                              size={18}
+                            />
+                          ))}
+                        </div>
+
+                        <div className="mt-auto">
+                          <Link to={`/drivers/${driver.driver.driverId}`}>
+                            <Button variant="primary" className="w-100 rounded-pill">
+                              View Profile
+                            </Button>
+                          </Link>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </>
+          ) : (
+            <DataNotFound text={"No Drivers Found"}/>
+          )}
         </>
       )}
     </Container>

@@ -6,7 +6,6 @@ import LoadingPanel from '../../predefind/LoadingPanel';
 import DataNotFound from '../../predefind/DataNotFound';
 import Notification from '../../predefind/Notification';
 import { useNavigate } from 'react-router-dom';
-
 import '../../css/cars.css';
 
 const Cars = () => {
@@ -15,24 +14,42 @@ const Cars = () => {
   const [notification, setNotification] = useState(null);
   const [presentClickedCar, setPresentClickedCar] = useState(null);
 
-  const navigate = useNavigate(); // ✅ React Router hook must be inside the component
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      axios.get('/carsData.json')
-        .then((response) => {
-          setCars(response.data || []);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching cars:', error);
-          setNotification({
-            status: 'failure',
-            message: 'Failed to fetch cars. Please try again.'
-          });
-          setLoading(false);
-        });
-    }, 500);
+      setLoading(true)
+      setCars([
+        {
+          "id": 1,
+          "name": "Hyundai i20",
+          "image": "/cars/c1.png",
+          "description": "Comfortable and reliable hatchback."
+        },
+        {
+          "id": 2,
+          "name": "Maruti Swift",
+          "image": "/cars/c2.jpeg",
+          "description": "Compact car with great mileage."
+        },
+        {
+          "id": 3,
+          "name": "Honda City",
+          "image": "/cars/c3.jpeg",
+          "description": "Premium sedan with luxury feel."
+        },
+        {
+          "id": 4,
+          "name": "Toyota Innova",
+          "image": "/cars/c4.jpeg",
+          "description": "Spacious and ideal for families."
+        }
+      ]
+      )
+      setLoading(false)
+
+    }
+    , 500);
     return () => clearTimeout(timer);
   }, []);
 
