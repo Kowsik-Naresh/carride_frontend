@@ -28,8 +28,12 @@ const Drivers = () => {
             status: 'failure',
             message: 'Failed to fetch drivers. Please try again.'
           });
+           setTimeout(() => {
+    setNotification(null);
+  }, 3000)
           setLoading(false);
         });
+        
     }, 500);
     return () => clearTimeout(timer);
   }, []);
@@ -58,7 +62,7 @@ const Drivers = () => {
 
               <Row className="g-4">
                 {drivers.map((driver) => (
-                  <Col key={driver.driver.driverId} xs={12} sm={6} md={4} lg={3}>
+                  <Col key={driver.driver.driverId} xs={6} sm={6} md={4} lg={3}>
                     <Card className="h-100 border-0 shadow-sm rounded-4 card-hover">
                       <Card.Img
                         variant="top"

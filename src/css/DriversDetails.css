@@ -1,50 +1,104 @@
-.testimonial-card {
-    transition: transform 0.4s ease, background-color 0.4s ease;
-    transform: scale(0.9);
-    opacity: 0.8;
-  }
-  
-  .testimonial-card.active.scale-lg {
-    transform: scale(1.2);
-    opacity: 1;
-    z-index: 2;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-  }
+/* DriversDetails.css */
+
+/* Container and general layout */
+.driver-info-pane {
+  background: #f9fafd;
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.15); /* subtle info-blue shadow */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.driver-profile-image {
+  width: 180px;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 2px;
+ 
+ 
+}
+
+
+.driver-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+#booknow {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+}
+
+#booknow:hover {
+  background-color: #084ecb;
+  color: white;
+}
+
+/* Tabs */
+.custom-nav-tabs .nav-link {
+  color: #0d6efd;
+  font-weight: 600;
+  border: none;
+  border-bottom: 3px solid transparent;
+  transition: border-bottom 0.3s ease;
+}
+
+.custom-nav-tabs .nav-link.active {
+  border-bottom: 3px solid #0d6efd;
+  color: #0a58ca;
+  font-weight: 700;
+}
+
+/* Info card */
+.info-card {
+  background: white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
+}
+
+/* License image */
+.license-image {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+/* Reviews section */
+.review-text {
+  padding-left: 15px;
+}
+
+.review-text p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-left: 60px;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #dee2e6 !important;
+}
+
+/* Modal rating stars */
+.star-rating {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
   .driver-profile-image {
-    max-width: 100%; /* Ensures image fits within the container */
-    height: auto; /* Maintains aspect ratio */
-    max-height: 300px; /* Limits the height to avoid oversized images */
-    object-fit: cover; /* Makes sure the image covers the container area */
-    
+    width: 140px;
+    height: 140px;
   }
-    
-  .driver-profile-image {
-    width: 200px; /* Increased size */
-    height: 200px;
-    object-fit: cover;
-   
-    transition: transform 0.3s ease;
-  }
-  
-  .driver-profile-image:hover {
-    transform: scale(1.05);
-  }
-  
+
   .driver-card {
-    padding: 1.5rem;
-   
-    border-radius: 1rem;
-   
-    transition: box-shadow 0.3s ease;
     margin-bottom: 2rem;
   }
-  #booknow {
-    transition: all 0.3s ease;
+
+  .info-card {
+    padding: 1rem;
   }
-  
-  #booknow:hover {
-    background-color: #ffffff;
-    color: #0d6efd; /* Bootstrap primary blue */
-    border: 1px solid #0d6efd;
-  }
-  
+}
