@@ -23,7 +23,7 @@
   background: white;
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
 }
 
 #booknow {
@@ -55,7 +55,6 @@
 /* Info card */
 .info-card {
   background: white;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
   border-radius: 1rem;
 }
 
@@ -102,3 +101,22 @@
     padding: 1rem;
   }
 }
+
+@media (min-width: 768px) {
+  .driver-page {
+    overflow: hidden;
+     max-height: 98vh;
+  }
+
+  .tab-scroll-container {
+    max-height:90vh;
+    overflow-y: auto;
+    overflow-x: hidden;     
+    padding-right: 10px;
+  }
+}
+
+body {
+  overflow-x: hidden;
+}
+

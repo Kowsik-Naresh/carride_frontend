@@ -10,7 +10,7 @@ const DriverHome = () => {
      <div style={{ backgroundColor: '#f4f6f8' }}>
      <Drivers/>
      </div>
-    <Footer/>
+    <Footer className="mb-0"/>
     </div>
   )
 }

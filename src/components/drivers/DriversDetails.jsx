@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
   Container,
@@ -31,7 +31,6 @@ const DriverDetail = () => {
   const { driverId } = useParams();
   const intDriverId = parseInt(driverId, 10);
   const [showAllReviews, setShowAllReviews] = useState(false);
-
   const [driver, setDriver] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('info');
@@ -46,9 +45,10 @@ const DriverDetail = () => {
     reviewText: '',
     reviewedDriverId: parseInt(driverId, 10),
   });
-   const [showModal, setShowModal] = useState(false);
-
-
+  const [showModal, setShowModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+const handleImageClick = () => setShowImageModal(true);
+const handleImageClose = () => setShowImageModal(false);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -92,39 +92,36 @@ const DriverDetail = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(localStorage.getItem("user")){
+    if (localStorage.getItem('user')) {
       axios
-      .post(`${appInitData.springUrl}/review/saveReview`, feedback)
-      .then(() => {
-        setNotification({
-          status: 'success',
-          message: 'Reviewed saved successfully.',
+        .post(`${appInitData.springUrl}/review/saveReview`, feedback)
+        .then(() => {
+          setNotification({
+            status: 'success',
+            message: 'Reviewed saved successfully.',
+          });
+        })
+        .catch((err) => {
+          setNotification({
+            status: 'failure',
+            message: 'Failed to save.',
+          });
+          console.log('error' + err);
         });
-      })
-      .catch((err) => {
-        setNotification({
-          status: 'failure',
-          message: 'Failed to save.',
-        });
-        console.log('error' + err);
+      handleClose();
+    } else {
+      setNotification({
+        status: 'failure',
+        message: 'Please Login',
       });
-    handleClose();
-    }
-    else{
-
-       setNotification({
-          status: 'failure',
-          message: ' Please Login',
-        });
-
-setShowModal(true)
-
-
+      setShowModal(true);
     }
   };
 
+  
+
   return (
-    <div>
+    <div className='driver-page'>
       <NavB />
       {notification && (
         <Notification requirements={notification} onClose={() => setNotification(null)} />
@@ -134,13 +131,15 @@ setShowModal(true)
           <LoadingPanel />
         </div>
       ) : (
-        <Container className="py-5">
+        <Container className="py-2">
           <Row className="align-items-start mb-4">
             <Col md={4} sm={12} className="text-center driver-card">
               <img
                 src={driver.profileImage}
                 alt={driver.driverName}
                 className="driver-profile-image shadow mb-3"
+                onClick={handleImageClick}
+                style={{ cursor: 'pointer' }}
               />
               <h2 className="fw-semibold text-dark mb-3">{driver.driverName}</h2>
               <div className="d-flex justify-content-center gap-4">
@@ -163,37 +162,25 @@ setShowModal(true)
 
                 <Row>
                   <Col>
-                    <Tab.Content>
+                    <Tab.Content className="tab-scroll-container">
                       <Tab.Pane eventKey="info">
-                        <div className="info-card p-4 rounded-4">
+                        <div className="info-card p-4">
                           <h5 className="section-title mb-4">
                             <FaInfoCircle className="text-info me-2" /> Additional Driver Info
                           </h5>
                           <Row>
-                            <Col className='mx-5' >
-                              <p className="d-flex align-items-center">
-                                <strong className='me-2'>Experience:</strong>
-                                <span>{driver.experience || 'N/A'} years</span>
+                            <Col className="mx-5">
+                              <p><strong className="me-2">Experience:</strong>{driver.experience || 'N/A'} years</p>
+                              <p><strong className="me-2">Rating:</strong>
+                                {[...Array(5)].map((_, index) => (
+                                  <StarFill
+                                    key={index}
+                                    color={index < rating ? '#FFD700' : '#d5d5d5'}
+                                    size={18}
+                                  />
+                                ))}
                               </p>
-
-                              <p className="d-flex align-items-center">
-                                <strong className='me-2'>Rating:</strong>
-                                <span>
-                                  {[...Array(5)].map((_, index) => (
-                                    <StarFill
-                                      key={index}
-                                      color={index < rating ? '#FFD700' : '#d5d5d5'}
-                                      size={18}
-                                    />
-                                  ))}
-                                </span>
-                              </p>
-
-                              <p className="d-flex align-items-center">
-                                <strong className='me-2'>Age:</strong>
-                                <span>{calculateAge(driver.dateOfBirth)}</span>
-                              </p>
-
+                              <p><strong className="me-2">Age:</strong>{calculateAge(driver.dateOfBirth)}</p>
                             </Col>
                             <Col md={6} className="mb-3">
                               <p><strong>License Image:</strong></p>
@@ -255,7 +242,7 @@ setShowModal(true)
                                         <div>
                                           <div className="d-flex align-items-center gap-2">
                                             <h6 className="mb-0 fw-semibold text-dark">{review.userName}</h6>
-                                            <img src="/verified.png" alt="Verified" width={16} height={16} title="Verified User" />
+                                            <img src="/verified.png" alt="Verified" width={16} height={16} />
                                           </div>
                                           <div className="d-flex gap-1 mt-1">
                                             {[...Array(5)].map((_, index) => (
@@ -276,13 +263,9 @@ setShowModal(true)
                                 );
                               })}
                             </Row>
-
                             {reviews.length > 5 && (
                               <div className="text-center mt-3">
-                                <Button
-                                  variant="link"
-                                  onClick={() => setShowAllReviews(!showAllReviews)}
-                                >
+                                <Button variant="link" onClick={() => setShowAllReviews(!showAllReviews)}>
                                   {showAllReviews ? 'View Less' : 'View More'}
                                 </Button>
                               </div>
@@ -290,7 +273,6 @@ setShowModal(true)
                           </>
                         )}
                       </Tab.Pane>
-
 
                       <Tab.Pane eventKey="tripHistory">
                         <Card className="mb-4">
@@ -348,23 +330,40 @@ setShowModal(true)
           </Modal>
 
           <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Create Account</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <UserRegistrationForm />
-        </Modal.Body>
-      </Modal>
+            <Modal.Header closeButton>
+              <Modal.Title>Create Account</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <UserRegistrationForm />
+            </Modal.Body>
+          </Modal>
+          <Modal show={showImageModal} onHide={handleImageClose} centered size="lg">
+  <Modal.Body cclassName="p-0 d-flex justify-content-center align-items-center" style={{ maxHeight: '80vh' }}>
+    <img
+      src={driver.profileImage}
+      alt={driver.driverName}
+      style={{
+        maxHeight: '80vh',
+        maxWidth: '100%',
+        objectFit: 'contain',
+        display: 'block',
+        margin: 'auto',
+      }}
+     
+    />
+  </Modal.Body>
+</Modal>
+
         </Container>
       )}
     </div>
   );
 };
+
 const calculateAge = (dob) => {
   if (!dob) return 'N/A';
   const birthDate = new Date(dob);
   const today = new Date();
-
   let years = today.getFullYear() - birthDate.getFullYear();
   let months = today.getMonth() - birthDate.getMonth();
   if (months < 0) {
@@ -372,18 +371,12 @@ const calculateAge = (dob) => {
     months += 12;
   }
   const days = today.getDate() - birthDate.getDate();
-  if (days < 0) {
-    months--;
-  }
+  if (days < 0) months--;
   if (months < 0) {
     months += 12;
     years--;
   }
-  if (years < 0) return 'N/A';
-
-  return `${years} year(s)`;
+  return years < 0 ? 'N/A' : `${years} year(s)`;
 };
-
-
 
 export default DriverDetail;
