@@ -54,17 +54,54 @@
 
 
   
-  
+/* drivers.css */
 
+
+
+.driver-card-img {
+  height: 220px;
+  object-fit: cover;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+.driver-card-img:hover {
+  opacity: 0.9;
+}
+
+.driver-card-content {
+  text-align: center;
+}
+
+.driver-card-content h5 {
+  font-size: 1.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.driver-card-content p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+@media (max-width: 576px) {
   .driver-card-img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    object-position: center;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    background-color: #f0f0f0;
+    height: 180px;
   }
+
+  .driver-card-content h5 {
+    font-size: 1rem;
+  }
+
+  .driver-card-content p {
+    font-size: 0.8rem;
+  }
+}
+
+
+
   
   .card-hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;

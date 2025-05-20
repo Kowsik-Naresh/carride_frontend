@@ -69,7 +69,6 @@ const Drivers = () => {
                           alt={driver.driver.driverName}
                           className="driver-card-img"
                           onClick={() => window.open(driver.driver.profileImage, '_blank')}
-                          style={{ cursor: 'pointer' }}
                         />
                         <Card.Body className="d-flex flex-column p-3">
                           <h5 className="fw-bold text-dark mb-1 text-center" title={driver.driver.driverName}>
