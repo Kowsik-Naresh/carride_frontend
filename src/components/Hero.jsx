@@ -38,10 +38,6 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleAccordionChange = (key) => {
-    // Toggle the accordion open and close
-    setActiveKey(activeKey === key ? null : key);
-  };
 
   return (
     <>
@@ -78,8 +74,8 @@ const Hero = () => {
           <div style={{display:"flex"}}>
           <div style={{display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column"}}>
            
-            <p className=" text-muted mb-3">
-              {texts[currentTextIndex]}
+            <p className=" text-fold mb-3">
+            On-Demand Driving Services
             </p>
             <Button variant="dark" size="sm" className="rounded-pill">
               Book Now
