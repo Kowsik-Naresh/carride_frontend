@@ -10,10 +10,10 @@
 }
 
 .driver-profile-image {
-  width: 180px;
-  height: 230px;
+  width: 300px;
+  height: 370px;
   object-fit: cover;
-  border-radius: 2px;
+  border-radius: 5px;
  
  
 }
@@ -119,4 +119,9 @@
 body {
   overflow-x: hidden;
 }
+
+.nav-link:hover {
+  background-color: transparent !important;
+}
+
 
