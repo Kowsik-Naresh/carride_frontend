@@ -50,7 +50,7 @@ const Drivers = () => {
       {loading ? (
         <div
           className="d-flex justify-content-center align-items-center"
-          style={{ height: '450px' }}
+          style={{ height: '200px' }}
         >
           <LoadingPanel />
         </div>
