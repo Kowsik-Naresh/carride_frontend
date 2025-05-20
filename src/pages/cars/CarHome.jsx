@@ -4,9 +4,11 @@ import Footer from '../../components/Footer'
 import Cars from '../../components/cars/Cars'
 const CarHome = () => {
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <NavB/>
-      <Cars/>
+      <div style={{ backgroundColor: '#f4f6f8', flex: 1 }}>
+        <Cars/>
+      </div>
       <Footer/>
     </div>
   )

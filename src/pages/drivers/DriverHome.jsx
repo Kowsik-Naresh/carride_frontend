@@ -5,12 +5,14 @@ import Drivers from '../../components/drivers/Drivers'
 
 const DriverHome = () => {
   return (
-    <div>
-     <NavB/>
-     <div style={{ backgroundColor: '#f4f6f8' }}>
-     <Drivers/>
-     </div>
-    <Footer className="mb-0"/>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <NavB />
+      
+      <div style={{ backgroundColor: '#f4f6f8', flex: 1 }}>
+        <Drivers />
+      </div>
+
+      <Footer />
     </div>
   )
 }

@@ -9,6 +9,7 @@ import {
   Nav,
   Card,
   Tab,
+  Tabs,
   Modal,
   Form,
 } from 'react-bootstrap';
@@ -47,11 +48,11 @@ const DriverDetail = () => {
   });
   const [showModal, setShowModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
-const handleImageClick = () => setShowImageModal(true);
-const handleImageClose = () => setShowImageModal(false);
+  const handleImageClick = () => setShowImageModal(true);
+  const handleImageClose = () => setShowImageModal(false);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('registeredUser'));
     if (user && user.userId) {
       setRevieweduserId(user.userId);
       setFeedback((prev) => ({ ...prev, revieweduserId: user.userId }));
@@ -92,9 +93,9 @@ const handleImageClose = () => setShowImageModal(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (localStorage.getItem('user')) {
+    if (localStorage.getItem('registeredUser')) {
       axios
-        .post(`${appInitData.springUrl}/review/saveReview`, feedback)
+        .post(`${appInitData.springUrl}/reviews/saveReview`, feedback)
         .then(() => {
           setNotification({
             status: 'success',
@@ -118,7 +119,7 @@ const handleImageClose = () => setShowImageModal(false);
     }
   };
 
-  
+
 
   return (
     <div className='driver-page'>
@@ -131,14 +132,13 @@ const handleImageClose = () => setShowImageModal(false);
           <LoadingPanel />
         </div>
       ) : (
-        <Container className="py-2">
+        <Container className="py-5">
           <Row className="align-items-start mb-4">
             <Col md={4} sm={12} className="text-center driver-card">
               <img
                 src={driver.profileImage}
                 alt={driver.driverName}
-                className="driver-profile-image shadow mb-3"
-                onClick={handleImageClick}
+                className="driver-profile-image"
                 style={{ cursor: 'pointer' }}
               />
               <h2 className="fw-semibold text-dark mb-3">{driver.driverName}</h2>
@@ -149,143 +149,152 @@ const handleImageClose = () => setShowImageModal(false);
             </Col>
 
             <Col md={8} sm={12}>
-              <Tab.Container activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
+              
+
+     
+
+      <Row>
+        <Col>
+        <Tabs
+      activeKey={activeTab}
+      onSelect={(k) => setActiveTab(k) } fill>
+          <Tab eventKey="info" title="Info">
+              <div className="info-card p-4">
+                <h5 className="section-title mb-4">
+                  <FaInfoCircle className="text-info me-2" /> Additional Driver Info
+                </h5>
                 <Row>
-                  <Col md={12}>
-                    <Nav variant="tabs" className="custom-nav-tabs justify-content-center mb-4">
-                      <Nav.Item><Nav.Link eventKey="info">Info</Nav.Link></Nav.Item>
-                      <Nav.Item><Nav.Link eventKey="reviews">Reviews</Nav.Link></Nav.Item>
-                      <Nav.Item><Nav.Link eventKey="tripHistory">Trip History</Nav.Link></Nav.Item>
-                    </Nav>
+                  <Col className="mx-5">
+                    <p>
+                      <strong className="me-2">Experience:</strong>
+                      {driver.experience || 'N/A'} years
+                    </p>
+                    <p>
+                      <strong className="me-2">Rating:</strong>
+                      {[...Array(5)].map((_, index) => (
+                        <StarFill
+                          key={index}
+                          color={index < rating ? '#FFD700' : '#d5d5d5'}
+                          size={18}
+                        />
+                      ))}
+                    </p>
+                    <p>
+                      <strong className="me-2">Age:</strong>
+                      {calculateAge(driver.dateOfBirth)}
+                    </p>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <p><strong>License Image:</strong></p>
+                    {driver.licenseImage ? (
+                      <img
+                        src={driver.licenseImage}
+                        alt="License"
+                        className="img-fluid license-image rounded-3 shadow"
+                        onClick={handleImageClick}
+                      />
+                    ) : (
+                      <p className="text-muted fst-italic">Not Available</p>
+                    )}
                   </Col>
                 </Row>
+              </div>
+            </Tab>
 
-                <Row>
-                  <Col>
-                    <Tab.Content className="tab-scroll-container">
-                      <Tab.Pane eventKey="info">
-                        <div className="info-card p-4">
-                          <h5 className="section-title mb-4">
-                            <FaInfoCircle className="text-info me-2" /> Additional Driver Info
-                          </h5>
-                          <Row>
-                            <Col className="mx-5">
-                              <p><strong className="me-2">Experience:</strong>{driver.experience || 'N/A'} years</p>
-                              <p><strong className="me-2">Rating:</strong>
-                                {[...Array(5)].map((_, index) => (
-                                  <StarFill
-                                    key={index}
-                                    color={index < rating ? '#FFD700' : '#d5d5d5'}
-                                    size={18}
-                                  />
-                                ))}
-                              </p>
-                              <p><strong className="me-2">Age:</strong>{calculateAge(driver.dateOfBirth)}</p>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                              <p><strong>License Image:</strong></p>
-                              {driver.licenseImage ? (
+            <Tab eventKey="reviews" title="reviews">
+              {reviews.length === 0 ? (
+                <Card className="mb-4">
+                  <Card.Body>
+                    <Card.Title>
+                      <FaStar className="text-warning me-2" />Reviews
+                    </Card.Title>
+                    <p className="text-muted">No reviews available yet.</p>
+                  </Card.Body>
+                </Card>
+              ) : (
+                <>
+                  <Row>
+                    {(showAllReviews ? reviews : reviews.slice(0, 5)).map((review, idx) => {
+                      const firstLetter = review.userName?.charAt(0) || 'U';
+                      const avatarColor = getAvatarColor(firstLetter);
+                      const hasImage = !!review.userProfileImage;
+
+                      return (
+                        <Col md={12} key={idx} className="p-0">
+                          <Row className="align-items-center px-3 py-3 border-bottom bg-white">
+                            <Col xs={12} md={3} className="d-flex align-items-center gap-3">
+                              {hasImage ? (
                                 <img
-                                  src={driver.licenseImage}
-                                  alt="License"
-                                  className="img-fluid license-image rounded-3 shadow"
+                                  src={review.userProfileImage}
+                                  alt={review.userName}
+                                  width={50}
+                                  height={50}
+                                  className="rounded-circle"
                                 />
                               ) : (
-                                <p className="text-muted fst-italic">Not Available</p>
+                                <div
+                                  style={{
+                                    width: 50,
+                                    height: 50,
+                                    borderRadius: '50%',
+                                    backgroundColor: avatarColor,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    fontSize: '18px',
+                                  }}
+                                >
+                                  {firstLetter.toUpperCase()}
+                                </div>
                               )}
+                              <div>
+                                <div className="d-flex align-items-center gap-2">
+                                  <h6 className="mb-0 fw-semibold text-dark">{review.userName}</h6>
+                                  <img src="/verified.png" alt="Verified" width={16} height={16} />
+                                </div>
+                                <div className="d-flex gap-1 mt-1">
+                                  {[...Array(5)].map((_, index) => (
+                                    <StarFill
+                                      key={index}
+                                      color={index < review.reviewBean.reviewRating ? '#FFD700' : '#D3D3D3'}
+                                      size={15}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            </Col>
+                            <Col className="review-text">
+                              <p className="text-muted mb-0 text-start">{review.reviewBean.reviewText}</p>
                             </Col>
                           </Row>
-                        </div>
-                      </Tab.Pane>
+                        </Col>
+                      );
+                    })}
+                  </Row>
+                  {reviews.length > 5 && (
+                    <div className="text-center mt-3">
+                      <Button variant="link" onClick={() => setShowAllReviews(!showAllReviews)}>
+                        {showAllReviews ? 'View Less' : 'View More'}
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+            </Tab>
 
-                      <Tab.Pane eventKey="reviews">
-                        {reviews.length === 0 ? (
-                          <Card className="mb-4">
-                            <Card.Body>
-                              <Card.Title><FaStar className="text-warning me-2" />Reviews</Card.Title>
-                              <p className="text-muted">No reviews available yet.</p>
-                            </Card.Body>
-                          </Card>
-                        ) : (
-                          <>
-                            <Row>
-                              {(showAllReviews ? reviews : reviews.slice(0, 5)).map((review, idx) => {
-                                const firstLetter = review.userName?.charAt(0) || 'U';
-                                const avatarColor = getAvatarColor(firstLetter);
-                                const hasImage = !!review.userProfileImage;
-                                return (
-                                  <Col md={12} key={idx} className="p-0">
-                                    <Row className="align-items-center px-3 py-3 border-bottom bg-white">
-                                      <Col xs={12} md={3} className="d-flex align-items-center gap-3">
-                                        {hasImage ? (
-                                          <img
-                                            src={review.userProfileImage}
-                                            alt={review.userName}
-                                            width={50}
-                                            height={50}
-                                            className="rounded-circle"
-                                          />
-                                        ) : (
-                                          <div style={{
-                                            width: 50,
-                                            height: 50,
-                                            borderRadius: '50%',
-                                            backgroundColor: avatarColor,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: 'white',
-                                            fontWeight: 'bold',
-                                            fontSize: '18px',
-                                          }}>{firstLetter.toUpperCase()}</div>
-                                        )}
-                                        <div>
-                                          <div className="d-flex align-items-center gap-2">
-                                            <h6 className="mb-0 fw-semibold text-dark">{review.userName}</h6>
-                                            <img src="/verified.png" alt="Verified" width={16} height={16} />
-                                          </div>
-                                          <div className="d-flex gap-1 mt-1">
-                                            {[...Array(5)].map((_, index) => (
-                                              <StarFill
-                                                key={index}
-                                                color={index < review.reviewBean.reviewRating ? '#FFD700' : '#D3D3D3'}
-                                                size={15}
-                                              />
-                                            ))}
-                                          </div>
-                                        </div>
-                                      </Col>
-                                      <Col className='review-text'>
-                                        <p className="text-muted mb-0 text-start">{review.reviewBean.reviewText}</p>
-                                      </Col>
-                                    </Row>
-                                  </Col>
-                                );
-                              })}
-                            </Row>
-                            {reviews.length > 5 && (
-                              <div className="text-center mt-3">
-                                <Button variant="link" onClick={() => setShowAllReviews(!showAllReviews)}>
-                                  {showAllReviews ? 'View Less' : 'View More'}
-                                </Button>
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </Tab.Pane>
-
-                      <Tab.Pane eventKey="tripHistory">
-                        <Card className="mb-4">
-                          <Card.Body>
-                            <Card.Title><FaCarSide className="me-2" />Trip History</Card.Title>
-                            <p className="text-muted">Trip history feature coming soon.</p>
-                          </Card.Body>
-                        </Card>
-                      </Tab.Pane>
-                    </Tab.Content>
-                  </Col>
-                </Row>
-              </Tab.Container>
+            <Tab eventKey="tripHistory" title="tripHistory">
+              <Card className="mb-4">
+                <Card.Body>
+                  <Card.Title><FaCarSide className="me-2" />Trip History</Card.Title>
+                  <p className="text-muted">Trip history feature coming soon.</p>
+                </Card.Body>
+              </Card>
+            </Tab>
+          </Tabs>
+        </Col>
+      </Row>
             </Col>
           </Row>
 
@@ -338,21 +347,21 @@ const handleImageClose = () => setShowImageModal(false);
             </Modal.Body>
           </Modal>
           <Modal show={showImageModal} onHide={handleImageClose} centered size="lg">
-  <Modal.Body cclassName="p-0 d-flex justify-content-center align-items-center" style={{ maxHeight: '80vh' }}>
-    <img
-      src={driver.profileImage}
-      alt={driver.driverName}
-      style={{
-        maxHeight: '80vh',
-        maxWidth: '100%',
-        objectFit: 'contain',
-        display: 'block',
-        margin: 'auto',
-      }}
-     
-    />
-  </Modal.Body>
-</Modal>
+            <Modal.Body cclassName="p-0 d-flex justify-content-center align-items-center" style={{ maxHeight: '80vh' }}>
+              <img
+                src={driver.licenseImage}
+                alt={driver.driverName}
+                style={{
+                  maxHeight: '80vh',
+                  maxWidth: '100%',
+                  objectFit: 'contain',
+                  display: 'block',
+                  margin: 'auto',
+                }}
+
+              />
+            </Modal.Body>
+          </Modal>
 
         </Container>
       )}

@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
 import "../../css/UserRegistrationForm.css";
-import NavB from '../NavB';
-import Footer from '../Footer';
-import User from '../user/user';
 import axios from 'axios';
+import User from './user';
 
 function UserRegistrationForm({ getUserDetails }) {
   const [formData, setFormData] = useState({
@@ -80,7 +78,10 @@ function UserRegistrationForm({ getUserDetails }) {
         });
 
         if (response.status === 200) {
-          getUserDetails(response.data.data); // Pass user data to parent component
+          localStorage.setItem('registeredUser', JSON.stringify(response.data.data));
+          if (typeof getUserDetails === 'function') {
+            getUserDetails(response.data.data);
+          }
           alert('User successfully registered!');
         } else {
           alert('Failed to register user. Please try again.');
@@ -95,111 +96,109 @@ function UserRegistrationForm({ getUserDetails }) {
   };
 
   return (
-    <div>
-      <Container>
-        <Row className="justify-content-center">
-          <Col lg={8} md={10} sm={12} className="custom-form-container">
-            <Form onSubmit={isDetailsSubmitted ? handleVerifyOtp : handleSubmitDetails}>
-              {!isDetailsSubmitted && (
-                <Row>
-                  <Col md={6}>
-                    <Form.Group controlId="profileImage" className="mb-3">
-                      <Form.Label>Profile Image</Form.Label>
-                      <Form.Control
-                        type="file"
-                        name="profileImage"
-                        accept="image/*"
-                        onChange={handleChange}
-                        required
-                      />
-                    </Form.Group>
-
-                    <Form.Group controlId="name" className="mb-3">
-                      <Form.Label>Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Enter your full name"
-                        required
-                      />
-                    </Form.Group>
-
-                    <Form.Group controlId="email" className="mb-3">
-                      <Form.Label>Email</Form.Label>
-                      <Form.Control
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Enter your email address"
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-
-                  <Col md={6}>
-                    <Form.Group controlId="phone" className="mb-3">
-                      <Form.Label>Phone Number</Form.Label>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="Enter your phone number"
-                        required
-                      />
-                    </Form.Group>
-
-                    <Form.Group controlId="password" className="mb-3">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Choose a strong password"
-                        required
-                      />
-                    </Form.Group>
-
-                    <Button variant="primary" type="submit" className="w-100 mt-4">
-                      Submit
-                    </Button>
-                  </Col>
-                </Row>
-              )}
-
-              {isDetailsSubmitted && formData.otpSent && (
-                <>
-                  <Form.Group controlId="otp" className="mb-3">
-                    <Form.Label>Enter OTP</Form.Label>
+    <Container>
+      <Row className="justify-content-center">
+        <Col lg={8} md={10} sm={12} className="custom-form-container">
+          <Form onSubmit={isDetailsSubmitted ? handleVerifyOtp : handleSubmitDetails}>
+            {!isDetailsSubmitted && (
+              <Row>
+                <Col md={6}>
+                  <Form.Group controlId="profileImage" className="mb-3">
+                    <Form.Label>Profile Image</Form.Label>
                     <Form.Control
-                      type="text"
-                      name="otp"
-                      value={formData.otp}
+                      type="file"
+                      name="profileImage"
+                      accept="image/*"
                       onChange={handleChange}
-                      placeholder="Enter OTP sent to your email or phone"
                       required
                     />
                   </Form.Group>
-                  <Button variant="success" type="submit" className="w-100">
-                    Verify OTP
-                  </Button>
-                </>
-              )}
 
-              {formData.otpVerified && (
-                <Alert variant="success" className="mt-3 text-center">
-                  Registration successful!
-                </Alert>
-              )}
-            </Form>
-          </Col>
-        </Row>
-      </Container>
-    </div>
+                  <Form.Group controlId="name" className="mb-3">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Enter your full name"
+                      required
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="email" className="mb-3">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="Enter your email address"
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+
+                <Col md={6}>
+                  <Form.Group controlId="phone" className="mb-3">
+                    <Form.Label>Phone Number</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="Enter your phone number"
+                      required
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="password" className="mb-3">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="Choose a strong password"
+                      required
+                    />
+                  </Form.Group>
+
+                  <Button variant="primary" type="submit" className="w-100 mt-4">
+                    Submit
+                  </Button>
+                </Col>
+              </Row>
+            )}
+
+            {isDetailsSubmitted && formData.otpSent && (
+              <>
+                <Form.Group controlId="otp" className="mb-3">
+                  <Form.Label>Enter OTP</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="otp"
+                    value={formData.otp}
+                    onChange={handleChange}
+                    placeholder="Enter OTP sent to your email or phone"
+                    required
+                  />
+                </Form.Group>
+                <Button variant="success" type="submit" className="w-100">
+                  Verify OTP
+                </Button>
+              </>
+            )}
+
+            {formData.otpVerified && (
+              <Alert variant="success" className="mt-3 text-center">
+                Registration successful!
+              </Alert>
+            )}
+          </Form>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
