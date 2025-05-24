@@ -61,7 +61,6 @@ body {
 @media (max-width: 992px) {
 .custom-modal-width{
  width: 1000px;
- background-color: red;
 }
 }
 .user-image {

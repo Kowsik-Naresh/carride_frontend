@@ -134,7 +134,7 @@ const DriverDetail = () => {
       ) : (
         <Container className="py-5">
           <Row className="align-items-start mb-4">
-            <Col md={4} sm={12} className="text-center driver-card">
+            <Col md={4} sm={12} >
               <img
                 src={driver.profileImage}
                 alt={driver.driverName}
