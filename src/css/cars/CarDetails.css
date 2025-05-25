@@ -104,8 +104,10 @@ textarea.form-control:focus {
 }
 
 .car-image {
-  height: 370px !important;
+  height: 350px !important;
+  width: 350px;
   object-fit: cover;
+    border-radius: 5px;
 }
 
 .car-description {
@@ -144,11 +146,18 @@ textarea.form-control:focus {
 
 
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
  .car-model-brand {
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin-left: 150px;
+  margin-left: 160px;
 }
+
+
+.car-image {
+  width: 200px;
+  height: 200px;
+  margin-left: 100px;
+}
+ 
 }

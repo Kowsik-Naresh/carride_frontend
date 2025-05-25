@@ -80,24 +80,24 @@ const CarDetails = ({ user }) => {
             <img
               src={car?.image || 'placeholder.jpg'}
               alt={car?.model}
-              className="img-fluid mb-3 car-image"
+              className="car-image"
             />
             <div className="car-model-brand">
-              <h4 className="fw-semibold text-dark mb-3" >{car?.model || 'Model not available'}</h4>
+
               <span className="text-muted">{car?.brand || 'Brand not available'}</span>
             </div>
 
 
             <div className="d-flex justify-content-center gap-4 mb-4">
-  <Button variant="primary">Book Car Now</Button>
-  <Button
-    variant="outline-primary"
-    onClick={() => setShowReviewModal(true)}
-  >
-    Feedback
-  </Button>
-  <Button variant="primary">Book With Driver</Button>
-</div>
+              <Button variant="primary">Book Car Now</Button>
+              <Button
+                variant="outline-primary"
+                onClick={() => setShowReviewModal(true)}
+              >
+                Feedback
+              </Button>
+              <Button variant="primary">Book With Driver</Button>
+            </div>
 
           </Col>
 

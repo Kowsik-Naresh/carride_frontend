@@ -91,29 +91,19 @@ const Cars = () => {
             {cars.length > 0 ? (
               cars.map((car) => (
                <Col key={car.id} xs={6} sm={6} md={4} lg={3}>
+<Card className="car-card" onClick={() => handleCarClick(car)}>
+  <Card.Img
+    variant="top"
+    src={car.image}
+    alt={car.name}
+    className="car-image"
+  />
+  <Card.Body className="car-body">
+    <h5 className="car-title">{car.name}</h5>
+  </Card.Body>
+</Card>
 
-                  <Card
-                    className="h-100 border-0 shadow-sm rounded-4 hover-shadow transition car-card"
-                    onClick={() => handleCarClick(car)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <Card.Img
-                      variant="top"
-                      src={car.image}
-                      alt={car.name}
-                      className="rounded-top"
-                      style={{
-                        height: '250px',
-                        objectFit: 'cover',
-                        borderTopLeftRadius: '1rem',
-                        borderTopRightRadius: '1rem'
-                      }}
-                    />
-                    <Card.Body className="text-center">
-                      <h5 className="fw-bold text-dark mb-1">{car.name}</h5>
-                     
-                    </Card.Body>
-                  </Card>
+
                 </Col>
               ))
             ) : (
