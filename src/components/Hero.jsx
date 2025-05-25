@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Container,
   Row,
@@ -6,44 +6,80 @@ import {
   Button,
   Nav,
   Accordion,
-  Card,
   Tab
 } from 'react-bootstrap';
 import Cars from './cars/Cars';
 import Drivers from './drivers/Drivers';
 import '../css/Hero.css';
 
+const cards = [
+  {
+    id: 1,
+    title: 'Book Your Driver Now',
+    button: 'Book Driver',
+    color: '#1E3A8A',
+    image: '/home/hero.png'
+  },
+  {
+    id: 2,
+    title: 'Trusted Cars for Rent',
+    button: 'Reserve Car',
+    color: '#16A34A',
+    image: '/driving-job.png'
+  },
+  {
+    id: 3,
+    title: 'Join Driving School',
+    button: 'Register Now',
+    color: '#F97316',
+    image: '/driving_school.png'
+  },
+  {
+    id: 4,
+    title: 'Drive and Earn Daily',
+    button: 'Apply Today',
+    color: '#7C3AED',
+    image: '/driving-job.png'
+  },
+];
+
 const Hero = () => {
-  const texts = [
-    "Book Professional Drivers",
-    "Hire Trusted Car Rentals",
-    "Get Experienced Chauffeurs",
-    "On-Demand Driving Services"
-  ];
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [activeKey, setActiveKey] = useState(null); // Set to null initially
+  const [activeKey, setActiveKey] = useState(null);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 450);
+  const [index, setIndex] = useState(0);
+  const startX = useRef(null);
 
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth > 450);
     window.addEventListener('resize', handleResize);
-
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTextIndex((prev) => (prev + 1) % texts.length);
-    }, 3000);
-    return () => clearInterval(interval);
+    const autoSlide = setInterval(() => {
+      setIndex((prev) => (prev + 1) % cards.length);
+    }, 4000);
+    return () => clearInterval(autoSlide);
   }, []);
 
+  const handleTouchStart = (e) => {
+    startX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX.current - endX;
+
+    if (diff > 50) {
+      setIndex((prev) => (prev + 1) % cards.length);
+    } else if (diff < -50) {
+      setIndex((prev) => (prev - 1 + cards.length) % cards.length);
+    }
+  };
 
   return (
     <>
-      {/* Hero Section  fo desktop*/}
       {isDesktop ? (
-        // ✅ Desktop Layout
         <Container fluid className="d-flex align-items-center ">
           <Container>
             <Row className="align-items-center">
@@ -51,18 +87,22 @@ const Hero = () => {
                 <h1 className="fw-bold display-5 mb-3 hero-heading">
                   Drive Your Journey<br /> with Ease
                 </h1>
-                <p className="fs-4 text-muted mb-3">
-                  {texts[currentTextIndex]}
+                <p className="fs-4 text-muted mb-3 animated-text">
+                  {cards[index].title}
                 </p>
-                <Button variant="dark" size="lg" className="rounded-pill">
-                  Book Now
+                <Button
+                  style={{ backgroundColor: cards[index].color, border: 'none' }}
+                  size="lg"
+                  className="rounded-pill"
+                >
+                  {cards[index].button}
                 </Button>
               </Col>
               <Col className="d-flex justify-content-center">
                 <img
-                  src="/home/hero.png"
+                  src={cards[index].image}
                   alt="Car Service"
-                  className="img-fluid"
+                  className="img-fluid fade-slide"
                   style={{ width: '90%', transform: 'scaleX(-1)' }}
                 />
               </Col>
@@ -70,35 +110,43 @@ const Hero = () => {
           </Container>
         </Container>
       ) : (
-        <div className="p-4 rounded  hero-card">
-          <div style={{display:"flex"}}>
-          <div style={{display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column"}}>
-           
-            <p className=" text-fold mb-3">
-            On-Demand Driving Services
-            </p>
-            <Button variant="dark" size="sm" className="rounded-pill">
-              Book Now
-            </Button>
+        <div className="slider-container">
+          <div
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            className="card-content fade-slide"
+          >
+            <div className="text-content">
+              <p className="slide-title animated-text">{cards[index].title}</p>
+              <button
+                className="book-btn"
+                style={{ backgroundColor: cards[index].color }}
+              >
+                {cards[index].button}
+              </button>
+            </div>
+            <div className="image-content">
+              <img
+                src={cards[index].image}
+                alt="Service"
+                className="fade-slide"
+                style={{ transform: 'scaleX(-1)' }}
+              />
+            </div>
           </div>
-          <div className="d-flex justify-content-center">
-            <img
-              src="/home/hero.png"
-              alt="Car Service"
-              className="img-fluid user-image"
-              style={{
-                width: '100%',
-                maxWidth: '300px',
-                transform: 'scaleX(-1)',
-              }}
-            />
-          </div>
+
+          <div className="dot-indicators">
+            {cards.map((_, i) => (
+              <span
+                key={i}
+                className={`dot ${index === i ? 'active' : ''}`}
+              ></span>
+            ))}
           </div>
         </div>
       )}
 
-      {/* Tabs for Cars and Drivers */}
-      <Container >
+      <Container>
         <Tab.Container defaultActiveKey="drivers">
           <Nav variant="tabs" className="justify-content-center mb-1">
             <Nav.Item>
@@ -148,7 +196,6 @@ const Hero = () => {
           </Accordion.Item>
         </Accordion>
       </Container>
-
     </>
   );
 };

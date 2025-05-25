@@ -3,7 +3,7 @@ import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
 import "../../css/UserRegistrationForm.css";
 import axios from 'axios';
 import User from './user';
-
+import appInitData from '../../required/appInitData.json'
 function UserRegistrationForm({ getUserDetails }) {
   const [formData, setFormData] = useState({
     profileImage: null,
@@ -71,7 +71,7 @@ function UserRegistrationForm({ getUserDetails }) {
       }
 
       try {
-        const response = await axios.post('http://localhost:8080/user/createUser', userObject.toJSON(), {
+        const response = await axios.post(`${appInitData.springUrl}/user/createUser`, userObject.toJSON(), {
           headers: {
             'Content-Type': 'application/json',
           },

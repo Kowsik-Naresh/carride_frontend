@@ -1,0 +1,75 @@
+.driver-card {
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    width: 100%;
+    max-width: 320px;
+  }
+  
+  .driver-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .driver-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    border-bottom: none;
+    margin: 0; /* Ensure no extra spacing */
+  }
+  
+  .driver-card-body {
+    padding: 1rem;
+    text-align: center;
+    margin: 0; /* Remove any default spacing */
+  }
+  
+  .driver-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .driver-experience {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 0.75rem;
+  }
+  
+  .driver-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .rating-label {
+    color: #555;
+    margin-right: 4px;
+    font-size: 0.95rem;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 576px) {
+    .driver-card {
+      max-width: 90%;
+    }
+  
+    .driver-card img {
+      height: 150px;
+    }
+  
+    .driver-name {
+      font-size: 1.25rem;
+    }
+  
+    .driver-experience,
+    .rating-label {
+      font-size: 0.9rem;
+    }
+  }
+  

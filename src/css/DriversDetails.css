@@ -11,7 +11,7 @@
 
 .driver-profile-image {
   width: 300px;
-  height: 300px;
+  height: 320px;
   object-fit: cover;
   border-radius: 5px;
  
@@ -90,12 +90,10 @@
 @media (max-width: 767.98px) {
   .driver-profile-image {
     width: 140px;
-    height: 140px;
+    height: 200px;
   }
 
-  .driver-card {
-    margin-bottom: 2rem;
-  }
+ 
 
   .info-card {
     padding: 1rem;
