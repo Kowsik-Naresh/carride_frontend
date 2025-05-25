@@ -1,5 +1,5 @@
 {
-    "springUrl": "https://krishnatravels-2.onrender.com",
+    "springUrl": "http://localhost:8080",
   
     "user": {
       "userId": 1,

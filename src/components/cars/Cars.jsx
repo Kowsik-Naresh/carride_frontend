@@ -6,6 +6,7 @@ import LoadingPanel from '../../predefind/LoadingPanel';
 import DataNotFound from '../../predefind/DataNotFound';
 import Notification from '../../predefind/Notification';
 import '../../css/cars.css';
+import DriverCard from '../drivers/DriverCard';
 
 const Cars = () => {
   const [cars, setCars] = useState([]);
@@ -90,19 +91,14 @@ const Cars = () => {
           <Row className="g-4">
             {cars.length > 0 ? (
               cars.map((car) => (
-               <Col key={car.id} xs={6} sm={6} md={4} lg={3}>
-<Card className="car-card" onClick={() => handleCarClick(car)}>
-  <Card.Img
-    variant="top"
-    src={car.image}
-    alt={car.name}
-    className="car-image"
-  />
-  <Card.Body className="car-body">
-    <h5 className="car-title">{car.name}</h5>
-  </Card.Body>
-</Card>
-
+                <Col key={car.id} xs={6} sm={6} md={4} lg={3}>
+                 
+<DriverCard onClick={() => handleCarClick(car)}
+                        image={car.image}
+                        name={car.name}
+                        experience={-1}
+                        rating={3}
+                    />
 
                 </Col>
               ))

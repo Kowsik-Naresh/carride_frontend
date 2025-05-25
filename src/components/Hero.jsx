@@ -63,7 +63,7 @@ const Hero = () => {
   useEffect(() => {
     const autoSlide = setInterval(() => {
       setIndex((prev) => (prev + 1) % cards.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(autoSlide);
   }, []);
 

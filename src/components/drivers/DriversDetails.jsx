@@ -51,6 +51,7 @@ const DriverDetail = () => {
   const handleImageClick = () => setShowImageModal(true);
   const handleImageClose = () => setShowImageModal(false);
 
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('registeredUser'));
     if (user && user.userId) {
@@ -66,6 +67,46 @@ const DriverDetail = () => {
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
+
+
+
+const [showBookingModal, setShowBookingModal] = useState(false);
+const handleBookingShow = () => setShowBookingModal(true);
+const handleBookingClose = () => setShowBookingModal(false);
+
+
+const initAutocomplete = () => {
+  if (!window.google || !window.google.maps || !window.google.maps.places) {
+    console.error("Google Maps Places library not loaded.");
+    return;
+  }
+
+  const pickupInput = document.getElementById("pickupLocation");
+  const dropInput = document.getElementById("dropLocation");
+
+  if (pickupInput) {
+    new window.google.maps.places.Autocomplete(pickupInput, {
+      types: ['geocode'], // You can also use ['establishment'] or ['(cities)']
+    });
+  }
+
+  if (dropInput) {
+    new window.google.maps.places.Autocomplete(dropInput, {
+      types: ['geocode'],
+    });
+  }
+};
+
+
+
+useEffect(() => {
+  if (showBookingModal) {
+    initAutocomplete();
+  }
+}, [showBookingModal]);
+
+
+
 
   useEffect(() => {
     axios
@@ -119,6 +160,30 @@ const DriverDetail = () => {
     }
   };
 
+const [bookingData, setBookingData] = useState({
+  pickupLocation: '',
+  dropLocation: '',
+});
+
+const handleBookingChange = (e) => {
+  const { name, value } = e.target;
+  setBookingData(prev => ({ ...prev, [name]: value }));
+};
+
+const handleBookingSubmit = (e) => {
+  e.preventDefault();
+  // Your booking logic here, e.g., call API to save booking
+  console.log('Booking submitted:', bookingData);
+
+  // Close the modal after submission
+  setShowBookingModal(false);
+
+  // Optionally, show a success notification
+  setNotification({
+    status: 'success',
+    message: 'Booking successful!',
+  });
+};
 
 
   return (
@@ -144,7 +209,9 @@ const DriverDetail = () => {
               <h2 className="fw-semibold text-dark mb-3">{driver.driverName}</h2>
               <div className="d-flex justify-content-center gap-4">
                 <Button variant="outline-primary" onClick={handleShow}>Feedback</Button>
-                <Button id="booknow" onClick={handleShow}>Book Now</Button>
+               <Button id="booknow" onClick={handleBookingShow}>Book Now</Button>
+
+
               </div>
             </Col>
 
@@ -337,6 +404,32 @@ const DriverDetail = () => {
               </Form>
             </Modal.Body>
           </Modal>
+
+                    <Modal show={showBookingModal} onHide={handleBookingClose} centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Book Driver</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form onSubmit={handleBookingSubmit}>  {/* <-- add submit handler */}
+      <Form.Group controlId="pickupLocation">
+        <Form.Label>Pickup Location</Form.Label>
+        <Form.Control type="text" placeholder="Enter pickup location" id="pickupLocation" onChange={handleBookingChange} />
+      </Form.Group>
+
+      <Form.Group controlId="dropLocation" className="mt-3">
+        <Form.Label>Drop Location</Form.Label>
+        <Form.Control type="text" placeholder="Enter drop location" id="dropLocation" onChange={handleBookingChange} />
+      </Form.Group>
+
+      <div className="mt-3 text-end">
+        <Button variant="secondary" onClick={handleBookingClose} className="me-2">Cancel</Button>
+        <Button type="submit" variant="primary">Confirm Booking</Button>
+      </div>
+    </Form>
+  </Modal.Body>
+</Modal>
+
+
 
           <Modal show={showModal} onHide={() => setShowModal(false)} centered>
             <Modal.Header closeButton>
