@@ -15,6 +15,7 @@ import '../css/Hero.css';
 const cards = [
   {
     id: 1,
+    heading: 'Drive Your Journey with Ease',
     title: 'Book Your Driver Now',
     button: 'Book Driver',
     color: '#1E3A8A',
@@ -22,26 +23,30 @@ const cards = [
   },
   {
     id: 2,
+    heading: 'Find Reliable Cars Instantly',
     title: 'Trusted Cars for Rent',
     button: 'Reserve Car',
-    color: '#16A34A',
+    color: '#9109b0',
     image: '/driving-job.png'
   },
   {
     id: 3,
+    heading: 'Master Driving Professionally',
     title: 'Join Driving School',
     button: 'Register Now',
-    color: '#F97316',
+    color: '#6881f2',
     image: '/driving_school.png'
   },
   {
     id: 4,
+    heading: 'Earn as You Drive',
     title: 'Drive and Earn Daily',
-    button: 'Apply Today',
+    button: 'Apply Now',
     color: '#7C3AED',
     image: '/driving-job.png'
   },
 ];
+
 
 const Hero = () => {
   const [activeKey, setActiveKey] = useState(null);
@@ -80,13 +85,21 @@ const Hero = () => {
   return (
     <>
       {isDesktop ? (
-        <Container fluid className="d-flex align-items-center ">
+        <Container fluid className="d-flex align-items-center position-relative desktop-hero">
+          <Button
+  className="arrow-btn left-arrow"
+  onClick={() => setIndex((prev) => (prev - 1 + cards.length) % cards.length)}
+>
+  &lt;
+</Button>
+
           <Container>
             <Row className="align-items-center">
-              <Col className="text-center text-md-start mb-4 mb-md-0">
-                <h1 className="fw-bold display-5 mb-3 hero-heading">
-                  Drive Your Journey<br /> with Ease
-                </h1>
+              <Col className="text-center text-md-start mb-4 mb-md-0 md-5">
+               <h1 className="fw-bold display-5 mb-3 hero-heading">
+  {cards[index].heading}
+</h1>
+
                 <p className="fs-4 text-muted mb-3 animated-text">
                   {cards[index].title}
                 </p>
@@ -107,7 +120,25 @@ const Hero = () => {
                 />
               </Col>
             </Row>
+            <div className="dot-indicators-desktop mt-4 d-flex justify-content-center w-100">
+  {cards.map((_, i) => (
+    <span
+      key={i}
+      className={`dot ${index === i ? 'active' : ''}`}
+      onClick={() => setIndex(i)}
+    ></span>
+  ))}
+</div>
+
           </Container>
+
+          <Button
+           
+            className="arrow-btn right-arrow"
+            onClick={() => setIndex((prev) => (prev + 1) % cards.length)}
+          >
+            &gt;
+          </Button>
         </Container>
       ) : (
         <div className="slider-container">
@@ -167,9 +198,9 @@ const Hero = () => {
         </Tab.Container>
       </Container>
 
-      <Container className="py-5">
-        <h2 className="text-center mb-4">Frequently Asked Questions</h2>
-        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
+      <Container className="faq-container py-5">
+  <h2>Frequently Asked Questions</h2>
+  <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
           <Accordion.Item eventKey="0">
             <Accordion.Header>How do I book a driver?</Accordion.Header>
             <Accordion.Body>
